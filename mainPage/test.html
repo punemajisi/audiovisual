@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Audiovisual Integration</title>
+</head>
+
+<body>
+	<h2>Audiovisual Integration</h2>
+	<br/>
+	<button onclick="init()"> initialization </button>
+	<br/>
+	<button onclick="clickE()"> Play/Pause	</button>
+	<br/>
+	<input type="number" min=0 max=1 step=0.01 value=0.1 id="ptime"/>
+	<button onclick="clickP()"> video ahead time(s) </button>
+	<br/>
+	<input type="number" min=0 max=1 step=0.01 value=0.1 id="mtime"/>
+	<button onclick="clickM()"> video lag time(s) </button>
+	<br/>
+	<button onclick="clickI()"> Do you think it is integration? </button>
+	<br/>
+	<video id= 'video'>
+		<source src="test.mp4">
+	</video>
+
+	<audio id= 'audio'>
+		<source src='test.mp3'>
+	</audio>
+
+	<p id=text></p>
+
+	<script type="text/javascript">
+		var video = document.getElementById('video');
+		var audio = document.getElementById('audio');
+		var text = document.getElementById('text');
+		
+		function init(){
+			var rand = Math.random() * 3;
+			var mod = Math.floor(Math.random() * 10); 
+			mod = mod%2;
+			document.getElementById('text').innerHTML += rand;
+			document.getElementById('text').innerHTML += '<br />';
+			document.getElementById('text').innerHTML += mod;
+			document.getElementById('text').innerHTML += '<br />';
+			if (mod){
+				video.currentTime += rand;
+			}else{
+				audio.currentTime += rand;
+			}
+		}
+
+		function clickE(){
+
+			if(video.paused && audio.paused){
+				video.play();
+				audio.play();
+				document.getElementById('text').innerHTML += 'play <br />';
+			}else{
+				video.pause();
+				audio.pause();
+				document.getElementById('text').innerHTML += 'pause <br />';
+			}
+		}
+
+		function clickP() {
+			var pt = document.getElementById("ptime");
+			pt = parseFloat(pt.value)
+			video.currentTime !== video.duration ? video.currentTime += pt : 1; 
+			document.getElementById('text').innerHTML += '+';
+			document.getElementById('text').innerHTML += pt;
+			document.getElementById('text').innerHTML += 's <br />';
+		}
+
+		function clickM() {
+			var mt = document.getElementById("mtime");
+			mt = parseFloat(mt.value)
+			video.currentTime !== 0 ? video.currentTime -= mt : 1;
+			document.getElementById('text').innerHTML += '-';
+			document.getElementById('text').innerHTML += mt;
+			document.getElementById('text').innerHTML += 's <br />';
+		}
+
+		function clickI(){
+			document.getElementById('text').innerHTML += 'integration <br />';
+		}
+
+	</script>
+</body>
+</html>

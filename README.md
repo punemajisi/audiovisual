@@ -1,8 +1,8 @@
 audiovisual
 -------
 ### 思路
-backend 推流, 前端根据后端推流的链接访问
-
+部署：backend 推流, 前端根据后端推流的链接访问
+更新：直接在前端发起 http 请求，访问后端的端口，端口执行数据库写入操作
 ### backend run
 cd backend, install packages
 run with

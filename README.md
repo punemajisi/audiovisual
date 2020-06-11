@@ -1,4 +1,4 @@
-audiovisual
+Audiovisual
 -------
 ### 思路
 部署：backend 推流, 前端根据后端推流的链接访问
@@ -10,7 +10,7 @@ run with
 node app.js
 ```
 access with url in broswer
-```
+```A
 http://localhost:3000/video/test.mp4
 ```
 

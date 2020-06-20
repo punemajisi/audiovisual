@@ -1,41 +1,95 @@
 <template>
-  <div>
+  <div style="display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;">
+    <audio id= 'audio'>
+      <source :src='audio_src'>
+    </audio>
     <el-container>
-      <el-header style="height:120px;">Audiovisual Integration</el-header>
-      <el-container>
-        <el-aside width="40%">
-          <el-row>
-            <el-col>
+      <el-header style="height:20%;">Audiovisual Integration</el-header>
+      <el-main>
+        <el-row type='flex' justify="space-between">
+          <el-col :span="20">
+            <video id= 'video'>
+              <source :src="video_src">
+            </video>
+          </el-col>
+          <el-col style="margin-left:10px" :span="10">
+              <div class="title-1">Video List</div>
+              <div style="overflow-y: scroll; height: 600px">
+                <el-card v-for="(item, idx) in video_list" v-bind:key="idx"  shadow="hover">
+                <el-row>
+                  <el-col :span="10">
+                    <el-image
+                    style="width: 100%; height: 100%"
+                    :src="image_base + `${item}.png`"
+                    fit></el-image>
+                  </el-col>
+                  <el-col :span="10">
+                    <div style="padding: 14px;">
+                      <span>{{item}}</span>
+                      <div class="bottom clearfix">
+                        <el-button type="text" @click="changeVideo(item)" class="button">View This Video</el-button>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                </el-card>
+              </div>
+              
+          </el-col>
+        </el-row>
+      </el-main>
+      <el-footer style="height:30%">
+          <el-row type='flex' justify="space-between" style="font-size:1ex; align-items:center;">
+            <el-col :span="6">
               <el-button icon="el-icon-video-play" circle @click="play">Play</el-button>
               <el-button icon="el-icon-video-pause" circle @click="pause">Pause</el-button>
             </el-col>
+            <el-col :span="8">
+              <div>
+                Video Ahead Times
+              </div>
+              <div>
+                <el-slider @change="pTimeChange" v-model="ptime" show-input :format-tooltip="formatTooltip"></el-slider>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div>
+                Video lag time(s)
+              </div>
+              <div>
+                <el-slider @change="mTimeChange" v-model="mtime" show-input :format-tooltip="formatTooltip"></el-slider>
+              </div>
+            </el-col>
+            
+
+              
           </el-row>
-          <el-row>
-              <el-col :span="10">Video Ahead Times</el-col>
-              <el-col :span="12"><el-slider @change="pTimeChange" v-model="ptime" show-input :format-tooltip="formatTooltip"></el-slider></el-col>
-          </el-row>
-          <el-row>
-              <el-col :span="10">Video lag time(s)</el-col>
-              <el-col :span="12"><el-slider @change="mTimeChange" v-model="mtime" show-input :format-tooltip="formatTooltip"></el-slider></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
+          <el-row style="font-size:2ex">
+            <el-col :span="4">
+              Response:
+            </el-col>
+            <el-col :span="4">
               <el-button type="success" @click="click_good_integration">Good Integration</el-button>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="4">
               <el-button type="warning" @click="click_bad_integration">Bad Integration</el-button>
             </el-col>
+            <el-col :span="10">
+              <el-input
+                type="textarea"
+                disabled
+                :rows="4"
+                placeholder="Your Operation will be shown here"
+                v-model="op_text">
+              </el-input>
+
+            </el-col>
           </el-row>
-        </el-aside>
-        <el-main>
-          <video id= 'video'>
-            <source :src="video_src">
-          </video>
-          <audio id= 'audio'>
-            <source :src='audio_src'>
-          </audio>
-        </el-main>
-      </el-container>
+
+      </el-footer>
     </el-container>
   </div>
 
@@ -48,22 +102,32 @@ export default {
   name: 'HelloWorld',
   data(){
       return {
+        test_val:2,
         cur_video:null,
         video_src:'http://localhost:3000/video/test.mp4',
         audio_src:'http://localhost:3000/audio/test.mp3',
-        video_src_base:'http://localhost:3000/video/',
-        audio_src_base:'http://localhost:3000/audio/',
+        video_src_base:'',
+        audio_src_base:'',
+        image_base:'',
+        l_ptime:0,
+        l_mtime:0,
         ptime: 0,
         mtime:0 ,
-        form:{
-          indicator: null, // 0 indicate bad, 1 indicate good
-        },
+        form:{}, // send value
         action_list:[],
-        video_list: null
+        video_list: null,
+        op_text:'',
 
       }
   },
   created(){
+    //. init base
+    // this.base = 'http://localhost:3000/' // for dev mode
+    this.base = '' // for built
+    this.video_src_base = this.base + 'video/'
+    this.audio_src_base = this.base + 'audio/'
+    this.image_base = this.base + 'public/images/'
+
     var rand = Math.random() * 3;
     var mod = Math.floor(Math.random() * 10); 
     mod = mod%2;
@@ -71,38 +135,66 @@ export default {
     this.mod = mod
   },
   mounted(){
-    this.video = document.getElementById('video');
-    this.audio = document.getElementById('audio');
+    this.getvideos()
+    this.getVAndA()
     if(this.mod){
       this.video.currentTime += this.rand;
     }else{
       this.audio.currentTime += this.rand;
     }
-    this.getvideos()
   },
   methods:{
+    // get video element and audio element
+    getVAndA(){
+      this.video = document.getElementById('video')
+      this.audio = document.getElementById('audio')
+    },
+    // change video
+    changeVideo(item){
+      this.cur_video = item
+      this.setUrls()
+      this.getVAndA()
+      // clean action list
+      this.action_list = []
+      console.log(item)
+    },
+    // trigger the p time change
     pTimeChange(){
-      let pt = this.ptime / 100
+      let pt = this.ptime / 100 - this.l_ptime
+      this.l_ptime = this.ptime / 100
+      // the action, contains current time, operation moving
+      let action_info =  `${this.video.currentTime}/${pt}`
       this.video.currentTime !== this.video.duration ? this.video.currentTime += pt : 1; 
-      this.action_list.push(`Video Ahead Time Change, with value ${pt} s`)
+      let info = `Video Ahead, with value ${pt} s`
+      
+      this.action_list.push(action_info) // store in db
+      this.op_text =  this.op_text + info + '\n'
       this.$message({
-          message: `Video Ahead Time Change, with value ${pt} s`,
+          message: info,
           type: 'success'
       });
     },
+    // trigger the lag time change
     mTimeChange(){
-      let mt = this.mtime / 100
+      let mt = this.mtime / 100 - this.l_mtime
+      this.l_mtime = this.mtime / 100
+      let action_info =  `${this.video.currentTime}/${mt}`
       this.video.currentTime !== this.video.duration ? this.video.currentTime -= mt : 1; 
-      this.action_list.push(`Video lag Time Change, with value ${mt} s`)
+      let info = `Video Backward, with value ${mt} s`
+      this.action_list.push(action_info) // store in db
+      this.op_text =  this.op_text + info + '\n'
       this.$message({
-          message: `Video lag Time Change, with value ${mt} s`,
+          message: info,
           type: 'success'
       });
     },
-    // set video audio urls
+    // reset video audio urls
     setUrls(){
       this.video_src = this.video_src_base + `${this.cur_video}.mp4`
       this.audio_src = this.audio_src_base + `${this.cur_video}.mp3`
+
+      this.video.src = this.video_src
+      this.audio.src = this.audio_src
     },
     // get all available videos
     getvideos(){
@@ -112,49 +204,57 @@ export default {
         this.cur_video = this.video_list[0]
         // console.log(this.cur_video)
         this.setUrls()
-        console.log('get available videos')
+        console.log(this.video_list)
       })
     },
     // upload final result
     upload_result(){
+      this.pause()
       let params = this.form
+      var timestamp = (new Date()).valueOf();
+      params['video_name'] = this.cur_video
+      params['actions'] = this.action_list.join('|')
+      params['timestamp'] = timestamp
+      params['rand'] = this.rand
+      console.log(params)
       uploadResult(params).then(res =>{
-        console.log(res)
+        let {status} = res
+        if(status == 0){
+          this.$notify({
+          title: 'Success',
+          message: 'Your Response has been uploaded, Thank you!',
+          type: 'success'
+        })
+        }else{
+          this.$notify.error({
+            title: 'Fail',
+            message: 'Something Wrong in uploading, please check.',
+            type: 'success'
+          })
+        }
       })
     },
+    // play and pause the video and audio
     play(){
       if(this.video.paused && this.audio.paused){
 				video.play();
         audio.play();
-        this.action_list.push('Play')
       }
       console.log("click play")
     },
     pause(){
       this.video.pause();
       this.audio.pause();
-      this.action_list.push('Pause')
       console.log("click pause")
     },
-    // click good integration
+    // reposne: integration
     click_good_integration(){
-      this.form.indicator = 1
-      this.$notify({
-          title: 'Success',
-          message: 'Your Response has been uploaded, Thank you!',
-          type: 'success'
-      })
+      this.form['indicator'] = 1
       this.upload_result()
       console.log("good integration")
     },
-    // click bad response
     click_bad_integration(){
-      this.form.indicator = 0
-      this.$notify({
-          title: 'Success',
-          message: 'Your Response has been uploaded, Thank you!',
-          type: 'success'
-      })
+      this.form['indicator'] = 0
       this.upload_result()
       console.log("bad integration")
     },
@@ -173,38 +273,26 @@ export default {
     height: 100%;
   }
   .el-header, .el-footer {
-    background-color: #B3C0D1;
+    background-color: #ebf7a8;
     color: #333;
-    text-align: center;
+    text-align: left;
     padding: 20px;
-    font-size: 10ex;
+    font-size: 5ex;
   }
   
   .el-aside {
-    background-color: #D3DCE6;
+    background-color: #dfe9f5;
     color: #333;
     text-align: center;
   }
   
   .el-main {
-    background-color: #E9EEF3;
+    background-color: #f0f1f2;
     color: #333;
     text-align: center;
-    line-height: 160px;
+    height:40%;
   }
-  
-  body > .el-container {
-    margin-bottom: 40px;
-  }
-  
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-  
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  }
+
   
   .el-row {
     margin-bottom: 20px;
@@ -212,4 +300,25 @@ export default {
       margin-bottom: 0;
     }
   }
+  video {
+    object-fit:fill;
+    margin-top: 2%;
+    width:100%;
+    height:660px;
+  }
+
+  .title-1 {
+    background: #2B6695;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 0 1px #5F5A4B, 1px 1px 6px 1px rgba(10, 10, 0, 0.5);
+    color: #FFFFFF;
+    font-family:"微软雅黑", "宋体", "黑体", Arial;
+    font-size: 18px;
+    font-weight: bold;
+    height: 25px;
+    line-height: 25px;
+    margin: 18px 0 !important;
+    padding: 8px 0 5px 5px;
+    text-shadow: 2px 2px 3px #222222;
+}
 </style>

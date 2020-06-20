@@ -25,14 +25,16 @@ audiovisual
   - 通过 `127.0.0.1:3000` 访问
 
 ### 如何建立数据库
-1. 在本地安装 mysql，并记录下用户名密码
-2. 修改位于 `backend/DBCreator.js & DBUtil.js` 下标注为 default settings 的部分
-3. 在本地数据库建立同名数据库
-4. 运行一次 DBCreator `node DBCreator.js`
-5. 数据库表会被自动创建
-   1. 注意，如果数据库的字段性质发生了改变
-      1. 添加新的字段不会出现问题
-      2. 删除旧的字段可能会出现问题，需要及时保存
+1. 在本地安装 mysql，并记录下用户名密码, 建立数据库。记录下数据库名，例如 `vdRecord`。
+2. 修改位于 `backend/DBCreator.js` 和 `backend/DBUtil.js` 下标注为 default settings 的部分
+   1. database 字段：数据库名
+   2. username：用户名
+   3. password：密码
+3. 运行一次 `backend` 下的 DBCreator `node DBCreator.js` 数据库表会被自动创建
+4. *关于修改
+   1. 所有数据库字段都在 Record 下被定义。
+   2. 添加新的字段不会出现问题
+   3. 删除旧的字段可能会出现问题，需要及时保存
    
 ### 如何添加新的视频（如果目前没有专门的 manager）
 1. 首先生成对应的 mp4 和 mp3 文件，建议将名称命名为同一个.例如 `test1.mp4` and `test1.mp3`
@@ -48,7 +50,8 @@ audiovisual
     - actions 字符串用 ｜ 分割，每一组代表 {操作发生时的 video time}/{将视频前移动（正）/后移动了多少}
   - indicator：最终选择，1代表 Good Integration， 0 代表 bad integration
   - timestamp：提交的时间戳
-  - （自添加字段）
+  - rand：前端产生的随机数
+  - 自添加字段
     - created_at: 创建时间
     - updated_at: 更新时间（最新更新的时间）
 

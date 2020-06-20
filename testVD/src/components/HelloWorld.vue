@@ -215,6 +215,7 @@ export default {
       params['video_name'] = this.cur_video
       params['actions'] = this.action_list.join('|')
       params['timestamp'] = timestamp
+      params['rand'] = this.rand
       console.log(params)
       uploadResult(params).then(res =>{
         let {status} = res

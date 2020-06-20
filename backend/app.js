@@ -37,12 +37,13 @@ app.get('/available_videos', (req, res) =>{
 // upload results
 app.post('/upload_result', (req, res) =>{
   console.log(req.body)
-  let {video_name, indicator, actions, timestamp} = req.body
+  let {video_name, indicator, actions, timestamp, rand} = req.body
   record_text = {
     video_name:video_name,
     indicator:indicator,
     actions:actions,
-    timestamp:timestamp
+    timestamp:timestamp,
+    rand:rand
   }
   Record.create(record_text).then(result =>{
     res.json({status:0, msg:'ok'})

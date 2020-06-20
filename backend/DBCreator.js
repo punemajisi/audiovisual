@@ -37,6 +37,7 @@ Record.init({
   actions: Sequelize.TEXT,
   indicator:Sequelize.TEXT,
   timestamp:Sequelize.TEXT,
+  rand:Sequelize.TEXT,
 }, { sequelize, modelName: 'Record' });
 
 

@@ -1,6 +1,6 @@
-audiovisual
+Audiovisual
 -------
-帮 CY 写的 Testing Prototype
+Tony 帮 CY 写的 Testing Prototype
 ### 思路
 - 视频预览：backend 推流, 前端根据后端推流的链接访问视频
 - 操作数据更新：前端记录完用户的操作后，发起 http 请求，访问后端的端口，端口执行数据库写入操作。

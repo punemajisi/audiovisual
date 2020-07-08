@@ -3,7 +3,7 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;">
-    <audio id= 'audio'>
+    <audio id= 'audio' preload="auto">
       <source :src='audio_src'>
     </audio>
     <el-container>
@@ -11,7 +11,7 @@
       <el-main>
         <el-row type='flex' justify="space-between">
           <el-col :span="20">
-            <video id= 'video'>
+            <video preload="auto" id= 'video'>
               <source :src="video_src">
             </video>
           </el-col>

@@ -45,24 +45,27 @@
           <el-row type='flex' justify="space-between" style="font-size:1ex; align-items:center;">
             <el-col :span="6">
               <el-button icon="el-icon-video-play" circle @click="play">Play</el-button>
-              <el-button icon="el-icon-video-pause" circle @click="pause">Pause</el-button>
-            </el-col>
+              </el-col>
+            <el-col :span="6">
+              <el-button icon="el-icon-video-pause" circle @click="pause">Pause</el-button>            
+              </el-col>
             <el-col :span="8">
               <div>
-                Video Ahead Times
+                Change audio timeline for your integration
               </div>
               <div>
-                <el-slider @change="pTimeChange" v-model="ptime" show-input :format-tooltip="formatTooltip"></el-slider>
+                <el-slider @change="pTimeChange" v-model="ptime" :format-tooltip="formatTooltip"></el-slider>
               </div>
             </el-col>
-            <el-col :span="8">
+
+             <!-- <el-col :span="8">
               <div>
                 Video lag time(s)
               </div>
               <div>
-                <el-slider @change="mTimeChange" v-model="mtime" show-input :format-tooltip="formatTooltip"></el-slider>
+                <el-slider @change="mTimeChange" v-model="mtime"  :format-tooltip="formatTooltip"></el-slider>
               </div>
-            </el-col>
+            </el-col>  -->
           </el-row>
 
           <el-row style="font-size:2ex">
@@ -109,7 +112,7 @@ export default {
         image_base:'',
         l_ptime:0,
         l_mtime:0,
-        ptime: 0,
+        ptime: 50,
         mtime:0 ,
         form:{}, // send value
         action_list:[],
@@ -120,8 +123,8 @@ export default {
   },
   created(){
     //. init base
-     this.base = 'http://localhost:3000/' // for dev mode
-    //this.base = '' // for built
+     //this.base = 'http://localhost:3000/' // for dev mode
+    this.base = '' // for built
     this.video_src_base = this.base + 'video/'
     this.audio_src_base = this.base + 'audio/'
     this.image_base = this.base + 'public/images/'
@@ -260,7 +263,8 @@ export default {
     },
     // format the slider
     formatTooltip(val) {
-      val =val / 100
+      // raw inetval [0 - 100] 1 as step new [-x - x]
+      val =(val - 50) / 100
       val = val.toFixed(2)
         return val;
     }

@@ -7,11 +7,11 @@
       <source :src='audio_src'>
     </audio>
     <el-container>
-      <el-header style="height:20%;">Audiovisual Integration</el-header>
+      <el-header style="height:10%;"><center>Audiovisual Integration </center></el-header>
       <el-main>
         <el-row type='flex' justify="space-between">
           <el-col :span="20">
-            <video preload="auto" id= 'video'>
+            <video preload="auto" id= 'video' >
               <source :src="video_src">
             </video>
           </el-col>
@@ -63,10 +63,8 @@
                 <el-slider @change="mTimeChange" v-model="mtime" show-input :format-tooltip="formatTooltip"></el-slider>
               </div>
             </el-col>
-            
-
-              
           </el-row>
+
           <el-row style="font-size:2ex">
             <el-col :span="4">
               Response:
@@ -97,7 +95,7 @@
 
 <script>
 import {getVideos} from '../../api/api';
-import {uploadResult } from '../../api/api';
+import {uploadResult} from '../../api/api';
 export default {
   name: 'HelloWorld',
   data(){
@@ -122,8 +120,8 @@ export default {
   },
   created(){
     //. init base
-    // this.base = 'http://localhost:3000/' // for dev mode
-    this.base = '' // for built
+     this.base = 'http://localhost:3000/' // for dev mode
+    //this.base = '' // for built
     this.video_src_base = this.base + 'video/'
     this.audio_src_base = this.base + 'audio/'
     this.image_base = this.base + 'public/images/'
@@ -165,9 +163,10 @@ export default {
       // the action, contains current time, operation moving
       let action_info =  `${this.video.currentTime}/${pt}`
       this.video.currentTime !== this.video.duration ? this.video.currentTime += pt : 1; 
+      pt = pt.toFixed(2)
       let info = `Video Ahead, with value ${pt} s`
-      
       this.action_list.push(action_info) // store in db
+
       this.op_text =  this.op_text + info + '\n'
       this.$message({
           message: info,
@@ -180,6 +179,7 @@ export default {
       this.l_mtime = this.mtime / 100
       let action_info =  `${this.video.currentTime}/${mt}`
       this.video.currentTime !== this.video.duration ? this.video.currentTime -= mt : 1; 
+      pt = pt.toFixed(2)
       let info = `Video Backward, with value ${mt} s`
       this.action_list.push(action_info) // store in db
       this.op_text =  this.op_text + info + '\n'
@@ -260,7 +260,9 @@ export default {
     },
     // format the slider
     formatTooltip(val) {
-        return val / 100;
+      val =val / 100
+      val = val.toFixed(2)
+        return val;
     }
   }
     
@@ -292,7 +294,6 @@ export default {
     text-align: center;
     height:40%;
   }
-
   
   .el-row {
     margin-bottom: 20px;
@@ -300,11 +301,11 @@ export default {
       margin-bottom: 0;
     }
   }
+
   video {
-    object-fit:fill;
     margin-top: 2%;
-    width:100%;
-    height:660px;
+    width:50%;
+    height:50%;
   }
 
   .title-1 {
@@ -321,4 +322,6 @@ export default {
     padding: 8px 0 5px 5px;
     text-shadow: 2px 2px 3px #222222;
 }
+
+
 </style>

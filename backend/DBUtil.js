@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 // settings for DB
 database = 'vdRecord'
 username = 'root'
-password = 'Zjtapp@123' 
+password = 'root' 
 host = 'localhost' 
 
 const sequelize = new Sequelize(database, username, password, {

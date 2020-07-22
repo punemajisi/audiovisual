@@ -40,24 +40,45 @@
               
           </el-col>
         </el-row>
+        <el-row type='flex' justify="space-between">
+          <el-col style="margin-left:10px">
+            <el-row  type='flex'  justify="center">
+              <el-col :span="10">
+                <el-button icon="el-icon-video-play" circle @click="play">Play</el-button>
+              </el-col>
+              <el-col :span="10">
+                <el-button icon="el-icon-video-pause" circle @click="pause">Pause</el-button>            
+              </el-col>
+            </el-row>
+            <el-row type='flex' justify="center">
+              <el-col :span='8'>
+              Change audio timeline for your integration
+                </el-col>
+              <el-col :span='8'>
+              <el-slider @change="pTimeChange" v-model="ptime" :format-tooltip="formatTooltip" show-input></el-slider>
+              </el-col>
+              </el-row>         
+            <el-row type='flex'  justify="center">
+              <el-col :span="6">
+                Response:
+              </el-col>
+              <el-col :span="6">
+                <el-button type="success" @click="click_good_integration">Good Integration</el-button>
+              </el-col>
+              <el-col :span="6">
+                <el-button type="warning" @click="click_bad_integration">Bad Integration</el-button>
+              </el-col>
+              </el-row>
+            </el-col>
+          <el-col style="margin-left:10px" :span="12">
+              <el-input type="textarea" disabled :rows="8" 
+              placeholder="Your Operation will be shown here" v-model="op_text">
+              </el-input>
+           </el-col>
+        </el-row>     
       </el-main>
       <el-footer style="height:30%">
           <el-row type='flex' justify="space-between" style="font-size:1ex; align-items:center;">
-            <el-col :span="6">
-              <el-button icon="el-icon-video-play" circle @click="play">Play</el-button>
-              </el-col>
-            <el-col :span="6">
-              <el-button icon="el-icon-video-pause" circle @click="pause">Pause</el-button>            
-              </el-col>
-            <el-col :span="8">
-              <div>
-                Change audio timeline for your integration
-              </div>
-              <div>
-                <el-slider @change="pTimeChange" v-model="ptime" :format-tooltip="formatTooltip"></el-slider>
-              </div>
-            </el-col>
-
              <!-- <el-col :span="8">
               <div>
                 Video lag time(s)
@@ -67,29 +88,6 @@
               </div>
             </el-col>  -->
           </el-row>
-
-          <el-row style="font-size:2ex">
-            <el-col :span="4">
-              Response:
-            </el-col>
-            <el-col :span="4">
-              <el-button type="success" @click="click_good_integration">Good Integration</el-button>
-            </el-col>
-            <el-col :span="4">
-              <el-button type="warning" @click="click_bad_integration">Bad Integration</el-button>
-            </el-col>
-            <el-col :span="10">
-              <el-input
-                type="textarea"
-                disabled
-                :rows="4"
-                placeholder="Your Operation will be shown here"
-                v-model="op_text">
-              </el-input>
-
-            </el-col>
-          </el-row>
-
       </el-footer>
     </el-container>
   </div>
@@ -112,7 +110,7 @@ export default {
         image_base:'',
         l_ptime:0,
         l_mtime:0,
-        ptime: 50,
+        ptime: 0,
         mtime:0 ,
         form:{}, // send value
         action_list:[],
@@ -123,8 +121,8 @@ export default {
   },
   created(){
     //. init base
-     //this.base = 'http://localhost:3000/' // for dev mode
-    this.base = '' // for built
+    this.base = 'http://localhost:3000/' // for dev mode
+    //this.base = '' // for build
     this.video_src_base = this.base + 'video/'
     this.audio_src_base = this.base + 'audio/'
     this.image_base = this.base + 'public/images/'
@@ -264,8 +262,8 @@ export default {
     // format the slider
     formatTooltip(val) {
       // raw inetval [0 - 100] 1 as step new [-x - x]
-      val =(val - 50) / 100
-      val = val.toFixed(2)
+      val =(val - 50) / 100 * 6;
+      val = val.toFixed(2);
         return val;
     }
   }
@@ -300,17 +298,12 @@ export default {
   }
   
   .el-row {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  video {
-    margin-top: 2%;
-    width:50%;
-    height:50%;
-  }
 
   .title-1 {
     background: #2B6695;

@@ -8,10 +8,10 @@
     </audio>
     <el-container>
       <el-header style="height:10%;">
-        <center>Audiovisual Integration</center>
+        <center>Audiovisual Perception Integration Crowdsourcing</center>
       </el-header>
       <el-main>
-        <el-row type="flex" justify="space-between">
+        <el-row type="flex" justify="space-between" >
           <el-col :span="20" class="videoscreen">
             <video preload="auto" id="video">
               <source :src="video_src" />
@@ -64,11 +64,11 @@
             </el-row>
             <!-- second row of control panel -->
             <el-row type="flex" justify="center">
-              <el-col :span="5" style="left">Change audio timeline for your integration</el-col>
-              <el-col :span="2">
+              <el-col :span="10">Change Audio to Your Integration</el-col>
+              <el-col :span="1">
                  <el-button icon="el-icon-d-arrow-left" @click="mstep"></el-button>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="5">
                 <!-- <el-slider
                   @change="pTimeChange"
                   v-model="ptime"
@@ -79,13 +79,13 @@
                 step = 0.01   
                 precision = 2
                 placeholder=0>
-                </el-inputNumber >
+                </el-inputNumber>
 
               </el-col>
-              <el-col :span="2">
+              <el-col :span="1">
                  <el-button icon="el-icon-d-arrow-right" @click="pstep"></el-button>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="10">
                 </el-col>
             </el-row>
             <!-- Third row of control panel -->
@@ -113,8 +113,8 @@
         </el-row>
       </el-main>
 
-      <el-footer >
-        <el-row>
+      <el-footer height='35px'>
+        <el-row class='labname'>
           <!-- <el-col :span="8">
               <div>
                 Video lag time(s)
@@ -123,7 +123,7 @@
                 <el-slider @change="mTimeChange" v-model="mtime"  :format-tooltip="formatTooltip"></el-slider>
               </div>
           </el-col>-->
-          Human Systems Laboratroy @ CUHK-SZ
+          Copyright © 2020 Human-Cloud Systems Laboratory, The Chinese University of Hong Kong, Shenzhen
         </el-row>
       </el-footer>
     </el-container>
@@ -344,6 +344,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@font-face{
+    font-family: 'Open San';
+    src: url("../assets/font/OpenSans-Regular.ttf");
+}
 .outer {
   height: 100%;
 }
@@ -373,7 +377,7 @@ export default {
   color: #333;
   text-align: center;
   font-size: 3ex;
-  height: 40%;
+  height: 60%;
 }
 
 .el-row {
@@ -387,11 +391,15 @@ export default {
 }
 
 .videolist {
-  background-color: #bbbbdd;
+  background-color: #bbbbcc;
 }
 
 .el-button {
   font-size: 20px;
+}
+
+.labname{
+  text-align: center;
 }
 
 .title-1 {
